@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oto.do - Future of Mobility</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-family: 'Space Grotesk', sans-serif;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #fff;
+        }
+
+        #experience {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            z-index: 10;
+        }
+
+        h1 {
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0;
+            animation: glitchText 5s infinite;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+        }
+
+        .cta {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+        }
+
+        .cta:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        @keyframes glitchText {
+            0% {
+                transform: translate(0);
+            }
+            20% {
+                transform: translate(-5px, 5px);
+            }
+            40% {
+                transform: translate(-5px, -5px);
+            }
+            60% {
+                transform: translate(5px, 5px);
+            }
+            80% {
+                transform: translate(5px, -5px);
+            }
+            100% {
+                transform: translate(0);
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #voiceOutput {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div id="experience"></div>
+    <div class="content">
+        <h1>oto.do</h1>
+        <p class="subtitle">Transcend Transportation</p>
+        <button class="cta">Initialize Experience</button>
+    </div>
+    <div id="voiceOutput" class="hidden"></div>
+
+    <script>
+        let scene, camera, renderer, particles;
+        const PARTICLE_COUNT = 5000;
+
+        function initThreeJS() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('experience').appendChild(renderer.domElement);
+
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(PARTICLE_COUNT * 3);
+
+            for (let i = 0; i < PARTICLE_COUNT * 3; i++) {
+                positions[i] = (Math.random() - 0.5) * 10;
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+
+            const material = new THREE.PointsMaterial({ color: 0xffffff, size: 0.05 });
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            camera.position.z = 5;
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            particles.rotation.x += 0.001;
+            particles.rotation.y += 0.002;
+
+            renderer.render(scene, camera);
+        }
+
+        function resizeHandler() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', resizeHandler, false);
+
+        // Voice synthesis
+        const synth = window.speechSynthesis;
+        function speak(text) {
+            if (synth.speaking) {
+                console.error('speechSynthesis.speaking');
+                return;
+            }
+            const utterThis = new SpeechSynthesisUtterance(text);
+            utterThis.pitch = 1;
+            utterThis.rate = 1;
+            synth.speak(utterThis);
+        }
+
+        // Initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            initThreeJS();
+            animate();
+
+            const content = document.querySelector('.content');
+            const h1 = content.querySelector('h1');
+            const subtitle = content.querySelector('.subtitle');
+            const cta = content.querySelector('.cta');
+            const voiceOutput = document.getElementById('voiceOutput');
+
+            setTimeout(() => {
+                h1.style.opacity = 1;
+                speak("Welcome to oto dot do");
+            }, 1000);
+
+            setTimeout(() => {
+                subtitle.style.opacity = 1;
+                speak("Transcend Transportation");
+            }, 2000);
+
+            setTimeout(() => {
+                cta.style.opacity = 1;
+            }, 3000);
+
+            cta.addEventListener('click', () => {
+                content.style.display = 'none';
+                voiceOutput.classList.remove('hidden');
+                startExperience();
+            });
+        });
+
+        function startExperience() {
+            const messages = [
+                "Initializing quantum travel algorithms",
+                "Synchronizing with global transportation network",
+                "Calculating optimal routes across space-time",
+                "Engaging holographic user interface",
+                "Welcome to the future of mobility"
+            ];
+
+            let index = 0;
+            const interval = setInterval(() => {
+                if (index < messages.length) {
+                    voiceOutput.textContent = messages[index];
+                    speak(messages[index]);
+                    index++;
+                } else {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        voiceOutput.textContent = "oto.do is ready. Your journey begins now.";
+                        speak("oto.do is ready. Your journey begins now.");
+                    }, 2000);
+                }
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
