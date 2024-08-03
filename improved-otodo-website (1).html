@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oto.do - Revolutionary Ride Booking</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+        
+        :root {
+            --primary-color: #00f7ff;
+            --secondary-color: #ff00e5;
+            --background-color: #0a0a2a;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto', sans-serif;
+            height: 100%;
+            background-color: var(--background-color);
+            color: #ffffff;
+            overflow: hidden;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
+            animation: neon-pulse 1.5s infinite alternate;
+        }
+        
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 600px;
+            line-height: 1.6;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 2rem;
+        }
+        
+        .demo-link, .playstore-button {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .demo-link {
+            background-color: var(--primary-color);
+            color: var(--background-color);
+        }
+        
+        .playstore-button {
+            background-color: var(--secondary-color);
+            color: #ffffff;
+        }
+        
+        .demo-link:hover, .playstore-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+        }
+        
+        .demo-link::before, .playstore-button::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.3), transparent);
+            transform: rotate(45deg);
+            transition: all 0.5s ease;
+        }
+        
+        .demo-link:hover::before, .playstore-button:hover::before {
+            left: 100%;
+            top: 100%;
+        }
+        
+        footer {
+            margin-top: 3rem;
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        @keyframes neon-pulse {
+            from {
+                text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color), 0 0 30px var(--primary-color);
+            }
+            to {
+                text-shadow: 0 0 5px var(--primary-color), 0 0 10px var(--primary-color), 0 0 15px var(--primary-color);
+            }
+        }
+        
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(255, 0, 229, 0.2) 0%, transparent 25%),
+                radial-gradient(circle at 80% 80%, rgba(0, 247, 255, 0.2) 0%, transparent 25%);
+            z-index: -2;
+        }
+        
+        .city-skyline {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><path d="M0 300V200h40l30-50h20l30 50h50l40-80h30l20 30h60l30-100h50l30 80h70l40-30h50l30 50h40l30-80h50l30 30h60l40-50h30l20 50h60V300z" fill="%23000033"/></svg>');
+            background-repeat: repeat-x;
+            background-size: contain;
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .floating-car {
+            position: absolute;
+            width: 100px;
+            height: 60px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 60"><path d="M10 40h80l5 10H5z" fill="%2300f7ff"/><path d="M20 30h60l5 10H15z" fill="%2300f7ff"/><circle cx="25" cy="50" r="5" fill="%23333"/><circle cx="75" cy="50" r="5" fill="%23333"/></svg>');
+            background-repeat: no-repeat;
+            animation: float 6s infinite ease-in-out;
+        }
+        
+        #car1 { top: 20%; left: 10%; }
+        #car2 { top: 40%; right: 15%; animation-delay: -2s; }
+        #car3 { bottom: 30%; left: 30%; animation-delay: -4s; }
+    </style>
+</head>
+<body>
+    <div class="background"></div>
+    <div class="city-skyline"></div>
+    <div class="floating-car" id="car1"></div>
+    <div class="floating-car" id="car2"></div>
+    <div class="floating-car" id="car3"></div>
+    <div class="container">
+        <div class="logo">○)○</div>
+        <h1>oto.do</h1>
+        <p>Experience the future of ride booking across all apps</p>
+        <div class="cta-buttons">
+            <a href="#" class="demo-link">Experience Demo</a>
+            <a href="#" class="playstore-button">Get on Playstore</a>
+        </div>
+        <p>* Be among the first! Register on Android for exclusive early access *</p>
+        <footer>
+            © 2024 Moontropy Pvt. Ltd., India | Redefining Mobility
+        </footer>
+    </div>
+    
+    <script>
+        function addStars() {
+            const starCount = 100;
+            const container = document.querySelector('.background');
+            
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.style.position = 'absolute';
+                star.style.width = '2px';
+                star.style.height = '2px';
+                star.style.backgroundColor = 'white';
+                star.style.borderRadius = '50%';
+                star.style.left = `${Math.random() * 100}%`;
+                star.style.top = `${Math.random() * 100}%`;
+                star.style.animation = `twinkle ${Math.random() * 4 + 2}s infinite alternate`;
+                container.appendChild(star);
+            }
+        }
+        
+        addStars();
+    </script>
+</body>
+</html>

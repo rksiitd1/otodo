@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>oto.do - Quantum Mobility Interface</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.1/gsap.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            font-family: 'Orbitron', sans-serif;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            color: #0ff;
+        }
+
+        #quantum-field {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+        }
+
+        .interface {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .holo-display {
+            width: 80vw;
+            height: 80vh;
+            background: rgba(0, 255, 255, 0.1);
+            border: 2px solid #0ff;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 2rem;
+            box-shadow: 0 0 20px #0ff, inset 0 0 20px #0ff;
+        }
+
+        .holo-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .holo-title {
+            font-size: 3rem;
+            font-weight: 700;
+            text-shadow: 0 0 10px #0ff;
+        }
+
+        .quantum-time {
+            font-size: 1.5rem;
+        }
+
+        .nav-orb {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle at 30% 30%, #0ff, #000);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-orb:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #0ff;
+        }
+
+        .holo-content {
+            flex-grow: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ai-assistant {
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .holo-footer {
+            display: flex;
+            justify-content: space-around;
+        }
+
+        .quantum-button {
+            padding: 1rem 2rem;
+            font-size: 1.2rem;
+            background: rgba(0, 255, 255, 0.2);
+            border: 1px solid #0ff;
+            color: #0ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantum-button:hover {
+            background: rgba(0, 255, 255, 0.4);
+            box-shadow: 0 0 20px #0ff;
+        }
+
+        .neural-link {
+            position: absolute;
+            width: 2px;
+            background: #0ff;
+            opacity: 0;
+            transition: all 0.5s ease;
+        }
+
+        #thought-input {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            padding: 1rem;
+            font-size: 1rem;
+            background: rgba(0, 255, 255, 0.1);
+            border: 1px solid #0ff;
+            color: #0ff;
+            text-align: center;
+        }
+
+        #thought-input::placeholder {
+            color: rgba(0, 255, 255, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div id="quantum-field"></div>
+    <div class="interface">
+        <div class="holo-display">
+            <div class="holo-header">
+                <h1 class="holo-title">oto.do</h1>
+                <div class="quantum-time">Quantum Time: <span id="q-time"></span></div>
+            </div>
+            <div class="holo-content">
+                <div class="ai-assistant" id="ai-response">Initializing Quantum Mobility Interface...</div>
+            </div>
+            <div class="holo-footer">
+                <div class="nav-orb" id="transport-orb"></div>
+                <button class="quantum-button" id="engage-btn">Engage Quantum Transport</button>
+                <div class="nav-orb" id="destination-orb"></div>
+            </div>
+        </div>
+    </div>
+    <input type="text" id="thought-input" placeholder="Think your destination..." />
+
+    <script>
+        let scene, camera, renderer, particles;
+        const PARTICLE_COUNT = 10000;
+
+        function initQuantumField() {
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            renderer = new THREE.WebGLRenderer({ alpha: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            document.getElementById('quantum-field').appendChild(renderer.domElement);
+
+            const geometry = new THREE.BufferGeometry();
+            const positions = new Float32Array(PARTICLE_COUNT * 3);
+            const colors = new Float32Array(PARTICLE_COUNT * 3);
+
+            for (let i = 0; i < PARTICLE_COUNT * 3; i += 3) {
+                positions[i] = (Math.random() - 0.5) * 10;
+                positions[i + 1] = (Math.random() - 0.5) * 10;
+                positions[i + 2] = (Math.random() - 0.5) * 10;
+
+                colors[i] = Math.random();
+                colors[i + 1] = Math.random();
+                colors[i + 2] = Math.random();
+            }
+
+            geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+            const material = new THREE.PointsMaterial({ size: 0.05, vertexColors: true });
+            particles = new THREE.Points(geometry, material);
+            scene.add(particles);
+
+            camera.position.z = 5;
+        }
+
+        function animateQuantumField() {
+            requestAnimationFrame(animateQuantumField);
+
+            particles.rotation.x += 0.001;
+            particles.rotation.y += 0.002;
+
+            const positions = particles.geometry.attributes.position.array;
+            for (let i = 0; i < positions.length; i += 3) {
+                positions[i] += Math.sin(Date.now() * 0.001 + i) * 0.001;
+                positions[i + 1] += Math.cos(Date.now() * 0.002 + i) * 0.001;
+                positions[i + 2] += Math.sin(Date.now() * 0.003 + i) * 0.001;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+        }
+
+        function resizeHandler() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        window.addEventListener('resize', resizeHandler, false);
+
+        function updateQuantumTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const milliseconds = String(now.getMilliseconds()).padStart(3, '0');
+            document.getElementById('q-time').textContent = `${hours}:${minutes}:${seconds}.${milliseconds}`;
+        }
+
+        function createNeuralLink(start, end) {
+            const link = document.createElement('div');
+            link.className = 'neural-link';
+            document.body.appendChild(link);
+
+            const length = Math.sqrt(
+                Math.pow(end.x - start.x, 2) + Math.pow(end.y - start.y, 2)
+            );
+            const angle = Math.atan2(end.y - start.y, end.x - start.x);
+
+            link.style.width = `${length}px`;
+            link.style.left = `${start.x}px`;
+            link.style.top = `${start.y}px`;
+            link.style.transform = `rotate(${angle}rad)`;
+
+            gsap.to(link, {
+                opacity: 1,
+                duration: 0.3,
+                onComplete: () => {
+                    gsap.to(link, {
+                        opacity: 0,
+                        duration: 0.3,
+                        delay: 0.5,
+                        onComplete: () => {
+                            link.remove();
+                        }
+                    });
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            initQuantumField();
+            animateQuantumField();
+            setInterval(updateQuantumTime, 10);
+
+            const aiResponses = [
+                "Quantum pathways aligned. Where shall we transport you?",
+                "Interdimensional coordinates locked. Awaiting your thought-command.",
+                "Temporal flux stabilized. Your quantum journey awaits.",
+                "Nano-wormholes generated. Think your destination into existence.",
+                "Probability waves collapsed. The multiverse is at your fingertips."
+            ];
+
+            const engageBtn = document.getElementById('engage-btn');
+            const thoughtInput = document.getElementById('thought-input');
+            const aiResponse = document.getElementById('ai-response');
+
+            engageBtn.addEventListener('click', () => {
+                const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
+                aiResponse.textContent = randomResponse;
+
+                const btnRect = engageBtn.getBoundingClientRect();
+                const startPoint = { x: btnRect.left + btnRect.width / 2, y: btnRect.top + btnRect.height / 2 };
+                const endPoint = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+                createNeuralLink(startPoint, endPoint);
+            });
+
+            thoughtInput.addEventListener('input', (e) => {
+                if (e.target.value.length > 0) {
+                    aiResponse.textContent = `Quantum destination recognized: ${e.target.value}. Preparing for transport...`;
+                }
+            });
+
+            document.querySelectorAll('.nav-orb').forEach(orb => {
+                orb.addEventListener('mouseover', () => {
+                    const orbRect = orb.getBoundingClientRect();
+                    const startPoint = { x: orbRect.left + orbRect.width / 2, y: orbRect.top + orbRect.height / 2 };
+                    const endPoint = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+                    createNeuralLink(startPoint, endPoint);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
